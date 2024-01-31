@@ -3,10 +3,10 @@ import numpy as np
 
 from gameoflife import next_generation, generate_random_board, BOARD_T
 
-TRAINING_DIMENSIONS = 5
-FILTERS = 32
-EPOCHS = 30
-TRAINING_BOARDS = 5000
+TRAINING_DIMENSIONS = 50
+FILTERS = 5
+EPOCHS = 200
+TRAINING_BOARDS = 256 * 100
 
 
 class GOLNetwork(tf.keras.Model):
@@ -69,5 +69,5 @@ def get_trained_model() -> GOLNetwork:
     inputs = np.array(
         [convert_board_to_tf_input(input_board) for input_board in inputs]
     )
-    model.fit(inputs, outputs, epochs=EPOCHS, verbose=1)
+    model.fit(inputs, outputs, epochs=EPOCHS, verbose=1, batch_size=256)
     return model

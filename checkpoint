@@ -1,2 +1,2 @@
-model_checkpoint_path: "GOLNetwork.ckpt"
-all_model_checkpoint_paths: "GOLNetwork.ckpt"
+model_checkpoint_path: "5_filters"
+all_model_checkpoint_paths: "5_filters"
