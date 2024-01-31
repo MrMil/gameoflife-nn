@@ -1,0 +1,14 @@
+default:
+  filters: 2
+  activation: sigmoid
+  dimensions: 5
+  number_of_boards: 25600
+  batch_size: 256
+  epochs: 300
+cpu-training:
+  filters: 32
+  activation: relu
+  dimensions: 5
+  number_of_boards: 5024
+  batch_size: 32
+  epochs: 30

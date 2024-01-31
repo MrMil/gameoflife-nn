@@ -3,20 +3,15 @@ import numpy as np
 
 from gameoflife import next_generation, generate_random_board, BOARD_T
 
-TRAINING_DIMENSIONS = 5
-FILTERS = 32
-EPOCHS = 30
-TRAINING_BOARDS = 5000
-
 
 class GOLNetwork(tf.keras.Model):
-    def __init__(self) -> None:
+    def __init__(self, filters: int, activation: str) -> None:
         super(GOLNetwork, self).__init__()
         self.conv1 = tf.keras.layers.Conv2D(
-            FILTERS,
+            filters,
             3,
             padding="same",
-            activation="relu",
+            activation=activation,
             strides=1,
             kernel_initializer="random_normal",
         )
@@ -54,12 +49,17 @@ def from_tf(prediction: np.ndarray, threshold: float = 0.2) -> BOARD_T:
     return [[0 if x < threshold else 1 for x in row] for row in prediction[0, :, :, 0]]
 
 
-def get_trained_model() -> GOLNetwork:
-    model = GOLNetwork()
+def get_trained_model(
+    filters: int,
+    activation: str,
+    dimensions: int,
+    number_of_boards: int,
+    batch_size: int,
+    epochs: int,
+) -> GOLNetwork:
+    model = GOLNetwork(filters, activation)
     model.compile(optimizer="adam", loss="mse", metrics=["accuracy"])
-    inputs = [
-        generate_random_board(TRAINING_DIMENSIONS) for _ in range(TRAINING_BOARDS)
-    ]
+    inputs = [generate_random_board(dimensions) for _ in range(number_of_boards)]
     outputs = np.array(
         [
             convert_board_to_tf_input(next_generation(input_board))
@@ -69,5 +69,5 @@ def get_trained_model() -> GOLNetwork:
     inputs = np.array(
         [convert_board_to_tf_input(input_board) for input_board in inputs]
     )
-    model.fit(inputs, outputs, epochs=EPOCHS, verbose=1)
+    model.fit(inputs, outputs, epochs=epochs, verbose=1, batch_size=batch_size)
     return model

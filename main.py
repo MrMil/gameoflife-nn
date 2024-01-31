@@ -1,6 +1,7 @@
 import argparse
 
 import requests
+import yaml
 
 from gameoflife import generate_empty_board, add_cells_pattern
 from network import get_trained_model, from_tf, to_tf, GOLNetwork
@@ -40,12 +41,29 @@ def main() -> None:
         default=False,
         help="Save the trained model to a file",
     )
+    parser.add_argument(
+        "-p",
+        "--model-parameters",
+        type=str,
+        default="default",
+        help="Parameters of the model",
+    )
     args = parser.parse_args()
 
+    with open("training_parameters.yaml", "r") as parameters_file:
+        parameters = yaml.safe_load(parameters_file)
+        if args.model_parameters not in parameters:
+            raise ValueError(
+                f"Parameters {args.model_parameters} not found in training_parameters.yaml"
+            )
+
     if args.train:
-        model = get_trained_model()
+        model = get_trained_model(**parameters[args.model_parameters])
     else:
-        model = GOLNetwork()
+        model = GOLNetwork(
+            parameters[args.model_parameters]["filters"],
+            parameters[args.model_parameters]["activation"],
+        )
         model.load_weights(args.model_weights)
 
     if args.save_model:

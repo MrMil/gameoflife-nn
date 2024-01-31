@@ -39,16 +39,28 @@ and this is how you run the model with your saved weights:
 ```bash
 python main.py -w my_weights.ckpt
 ```
+
+In case you don't have a GPU the model will take a long time to train.
+I have created a larger version of the model which is easier to train, you can train it using this command:
+```bash
+python main.py -t -p cpu-training
+```
+
 # The model
 The model structure is very simple - it's a 3x3 convolutional layer followed by a 1x1 convolutional layer.
 It's implemented using the subclass API of TensorFlow in order to implement to wraparound behaviour.
 
 # Play with it!
-The included model trains on a 5000 5x5 random boards, the model has 32 filters and is trained for 30 epochs
+The included model trains on a 25600 5x5 random boards, the model has 2 sigmoid activated filters and is trained for 300 epochs.
 
-Play with the constants on the top network.py to see how low you can go with the filters and still get a working result.
-The smallest model I got to work consistently had 5 filters - but this took a larger training set and a lot more epochs.
-The values provided here are with 32 filters, 5000 5x5 training boards and 30 epochs, and this works reliably every time you train the model.
+The cpu-training model trains on a 5024 5x5 random boards, the model has 32 relu activated filters and is trained for 30 epochs
+
+You can create your own training profile in the [training_parameters.yaml](training_parameters.yaml) to try and optimize the learning time and the running time.
+
+You can then run your profile using this command:
+```bash
+python main.py -t -p PROFILE_NAME_HERE
+```
 If you get loss of less than 1e-3 game of life will run reliably.
 
 You can also change the function in the end of [main.py](main.py) to do something different with the end results.
