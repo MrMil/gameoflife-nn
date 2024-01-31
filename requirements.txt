@@ -1,0 +1,17 @@
+tensorflow[and-cuda]
+jupyter
+matplotlib
+pillow
+pydot
+graphviz
+pydot_ng
+pandas
+scikit-learn
+tensorflow_datasets
+tensorflow_hub
+PyQt5
+requests
+types-requests
+pygame
+pre-commit
+mypy
